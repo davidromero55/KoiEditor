@@ -1,0 +1,47 @@
+#ke-main-table {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+#ke-main-table td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid #262223;
+}
+
+#ke-toolbox-container-td {
+    background-color: #454545;
+    color: #cbcbcb;
+}
+.ke-toolbox-container {
+    padding: 0;
+}
+.ke-toolbox-header {
+    background-color: #262223;
+    margin: 0;
+}
+.ke-toolbox-container .card {
+    border: 0;
+    border-radius: 0;
+}
+.ke-toolbox-container .card-header {
+    background-color: #3b3b3b;
+}
+.ke-toolbox-container .card-header:first-child {
+    border-radius: 0;
+}
+.ke-toolbox-container .card-body {
+    background-color: #454545;
+}
+.ke-toolbox-container .btn-link {
+    color: #FFF;
+}
+
+#ke-content {
+    border: 1px dashed #00E;
+}
+.ke-element-p:hover {
+    border: 1px dashed #00f;
+    cursor: text;
+}
