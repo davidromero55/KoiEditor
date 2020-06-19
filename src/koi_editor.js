@@ -27,10 +27,10 @@ $(document).ready(function(){
             $('head').append('<link rel="stylesheet" type="text/css" href="' + settings.homeUrl + 'koi_editor/css/koi_editor.css">');
 
             // Insert the editor div
-            $('body').html('<table class="table" id="ke-main-table" width="100%" border="0" height="' + height + '"><tr><td width="20%" id="ke-toolbox-container-td"></td><td style="overflow: scroll;"><div class="container-fluid" id="ke-main-container">' + $('body').html() + '</div></td></tr></table>');
+            $('body').html('<table class="table" id="ke-main-table" width="100%" border="0" height="' + height + '"><tr><td width="20%" id="ke-toolbox-td"></td><td style="overflow: scroll;"><div class="container-fluid" id="ke-main-container">' + $('body').html() + '</div></td></tr></table>');
 
             // Load the toolbox
-            $('#ke-toolbox-container-td').load(settings.homeUrl + 'koi_editor/html/toolbox.html');
+            $('#ke-toolbox-td').load(settings.homeUrl + 'koi_editor/html/toolbox.html');
 
             // Activate the editable elements
             _self._activateEditableElements();
@@ -63,23 +63,69 @@ $(document).ready(function(){
         }
 
         _self._editElement = function _editElement(elementType, object){
+            $('#ke-toolbox-body').html('');
             edditingElement = object;
             edditingElementType = elementType;
             console.log(elementType);
-            if(elementType == 'p'){
-                console.log('init element type');
-                edditingElementObject = KoiEditorEditElementP();
-            }
-        }
-
-        function KoiEditorEditElementP () {
-            var _self = {};
+            console.log('init element type');
             elementProperties[edditingElementType].properties.forEach(function (property, index, array) {
-                console.log('In property');
+                console.log('In property ' + property);
+                if(property == 'text'){
+                    _self.kePropertyText();
+                }
+                if(property == 'color'){
+                    _self.kePropertyColor();
+                }
             });
-
-            return _self;
         }
+
+        _self.kePropertyText = function kePropertyText () {
+            $.ajax({ type: "GET",
+                url: settings.homeUrl + 'koi_editor/html/property-text.html',
+                success : function(propertyHTML)
+                {
+                    $('#ke-toolbox-body').append(propertyHTML);
+                    _self.kePropertyTextEvents();
+                }
+            });
+        }
+        _self.kePropertyTextEvents = function kePropertyTextEvents () {
+            $('#ke-property-text-text').val( _self.keBrToLineBreaks( edditingElement.html() ) );
+            $('#ke-property-text-text').focus();
+            $('#ke-property-text-text').prop('selectionEnd', 1100);
+            $('#ke-property-text-text').keyup(function() {
+                edditingElement.html(_self.keLineBreaksToBr($(this).val()));
+            });
+        }
+        _self.keLineBreaksToBr = function keLineBreaksToBr (text) {
+            var re = /\n/gi;
+            var html = text.replace(re,"<br>");
+            return html;
+        }
+        _self.keBrToLineBreaks = function keBrToLineBreaks (html) {
+            var re = /<br\s*\/*>/gi;
+            var text = html.replace(re,"\n");
+            return text;
+        }
+        _self.kePropertyColor = function kePropertyColor () {
+            $.ajax({ type: "GET",
+                url: settings.homeUrl + 'koi_editor/html/property-color.html',
+                success : function(propertyHTML)
+                {
+                    $('#ke-toolbox-body').append(propertyHTML);
+                    //_self.kePropertyTextEvents();
+                }
+            });
+        }
+        // _self.kePropertyColorEvents = function kePropertyColorEvents () {
+        //     $('#ke-property-text-text').val( _self.keBrToLineBreaks( edditingElement.html() ) );
+        //     $('#ke-property-text-text').focus();
+        //     $('#ke-property-text-text').prop('selectionEnd', 1100);
+        //     $('#ke-property-text-text').keyup(function() {
+        //         edditingElement.html(_self.keLineBreaksToBr($(this).val()));
+        //     });
+        // }
+
 
         _self._init();
         return _self;
