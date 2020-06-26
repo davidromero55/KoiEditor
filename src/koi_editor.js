@@ -1,4 +1,4 @@
-$(document).ready(function(){
+
     'use strict';
 
     function KoiEditor(){
@@ -44,16 +44,25 @@ $(document).ready(function(){
         }
 
         _self._deactivateEditableElements = function _deactivateEditableElements(){
-            editableElements.forEach(function (element, index, array) {
-                $('#ke-main-container ' + element).each(function(i, obj) {
-                    $(this).removeClass('ke-element-p');
+            var keEditableContentDiv = 'ke-editable-content';
+            if ( $( '#' + keEditableContentDiv ).length <= 0) {
+                keEditableContentDiv = 'ke-main-container';
+            }
+            editableElements.forEach(function (elementType, index, array) {
+                $('#' + keEditableContentDiv + ' ' + elementType).each(function(i, obj) {
+                    $(this).removeClass('ke-element-'+elementType);
                 });
             });
         }
 
         _self._activateEditableElements = function _activateEditableElements(){
+            var keEditableContentDiv = 'ke-editable-content';
+            if ( $( '#' + keEditableContentDiv ).length <= 0) {
+                keEditableContentDiv = 'ke-main-container';
+            }
+
             editableElements.forEach(function (elementType, index, array) {
-                $('#ke-main-container ' + elementType).each(function(i, obj) {
+                $('#' + keEditableContentDiv + ' ' + elementType).each(function(i, obj) {
                     $(this).addClass('ke-element-'+elementType);
                     $(this).click(function() {
                         _self._editElement( elementType, $( this ) );
@@ -126,13 +135,12 @@ $(document).ready(function(){
         //     });
         // }
 
+        _self.keSave = function keSave() {
+            _self._deactivateEditableElements();
+            $.post( "test.php", { name: "John", time: "2pm" } );
+            alert("Saved");
+        }
 
         _self._init();
         return _self;
     }
-
-    if(typeof(window.koiEditor) === 'undefined'){
-        window.koiEditor = KoiEditor();
-    }
-
-});
